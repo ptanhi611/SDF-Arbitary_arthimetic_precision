@@ -1,3 +1,4 @@
+package MyInfArith;
 
 import arbitraryarithmetic.*;
 
