@@ -1,5 +1,4 @@
 package MyInfArith;
-
 import arbitraryarithmetic.*;
 
 public class MyInfArith {
