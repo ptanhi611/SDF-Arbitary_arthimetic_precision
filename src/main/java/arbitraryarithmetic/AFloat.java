@@ -155,7 +155,7 @@ public class AFloat  {
 
         int after =ans.get_digits().size();
 
-        return new AFloat(ans,before-after);
+        return new AFloat(ans,1000-before+after);
     }
 
 
