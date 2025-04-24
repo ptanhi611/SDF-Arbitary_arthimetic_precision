@@ -149,9 +149,13 @@ public class AFloat  {
         AInteger shifted_other = other.shift_deci(other.scale);
 
         AInteger ans = shifted_this.div(shifted_other);
-        ans.removeTrailingZeros(this.value.get_digits().size()-other.value.get_digits().size()-this.scale+other.scale);
+        int before =ans.get_digits().size();
 
-        return new AFloat(ans,1000);        
+        ans.removeTrailingZeros(1000);
+
+        int after =ans.get_digits().size();
+
+        return new AFloat(ans,before-after);
     }
 
 

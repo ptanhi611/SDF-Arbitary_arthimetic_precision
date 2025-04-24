@@ -1,4 +1,4 @@
-package arbitraryarithmetic;
+package initial_raw_files_for_arbitraryarithmetic;
 
 import java.util.ArrayList;
 
@@ -153,7 +153,7 @@ public class AFloat  {
 
         ans.removeTrailingZeros(1000);
 
-        int after =ans.get_digits.size();
+        int after =ans.get_digits().size();
 
         return new AFloat(ans,before-after);        
     }

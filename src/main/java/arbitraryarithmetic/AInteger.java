@@ -316,12 +316,11 @@ public class AInteger {
 
 
 
-    public void removeTrailingZeros(int dec){
-        for(int i = this.digit.size()-1;i>=dec;i--){
-            if(this.digit.get(i)==0){
-                this.digit.remove(i);
-            }
-            else break;
+    public void removeTrailingZeros(int scale){
+        
+        while(scale>0 && this.digit.get(0)==0){
+            this.digit.remove(0);
+            scale--;
         }
     }
 }
