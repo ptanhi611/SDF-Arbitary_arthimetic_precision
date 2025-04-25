@@ -145,13 +145,17 @@ public class AFloat  {
 
 
     public AFloat div(AFloat other){
-        AInteger shifted_this = this.shift_deci(other.scale+1000);
-        AInteger shifted_other = other.shift_deci(other.scale);
+
+        int scale = Math.max(this.scale,other.scale);
+
+
+        AInteger shifted_this = this.shift_deci(scale+1000);
+        AInteger shifted_other = other.shift_deci(scale);
 
         AInteger ans = shifted_this.div(shifted_other);
         int before =ans.get_digits().size();
 
-        ans.removeTrailingZeros(1000);
+        ans.removeTrailingZeros(scale+1000,Math.max(0, this.value.get_digits().size()-other.value.get_digits().size()+scale-other.scale));
 
         int after =ans.get_digits().size();
 

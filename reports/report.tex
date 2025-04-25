@@ -1,6 +1,174 @@
-\documentclass{article}
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{parskip}
+
+\geometry{margin=1in}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\thepage}
+\lhead{Arbitrary Precision Arithmetic Library}
+
+\title{\textbf{Design and Implementation of an Arbitrary Precision Arithmetic Library in Java}}
+\author{
+    \textbf{Author:} \\
+    Rishit Mittal \\
+    CS24BTECH11053\\
+}
+\date{\today}
+
 \begin{document}
-Name: Rishit Mittal
-Rol No. CS24BTECH11053
-Arbritrary precision arithmetic
+
+\maketitle
+
+\begin{abstract}
+This report presents the design rationale, implementation strategy, verification approach, and key insights gained during the development of a Java-based library for arbitrary precision arithmetic. The library enables mathematical operations on integers and floating-point numbers with theoretically unbounded precision, making it suitable for scientific and cryptographic computations requiring high accuracy.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+This project aims to implement a high-precision arithmetic library capable of operating on both integers and floating-point numbers with arbitrary digit length. It was developed with object-oriented programming principles and is compatible with both Java and Python interfaces. The motivation behind this project stems from the limitations of built-in data types in traditional programming languages which cannot natively support operations on extremely large or precise numerical values.
+
+\section{Features and Language Extensions}
+\label{sec:features}
+This section outlines the major features provided by the library and presents illustrative examples for each. These enhancements effectively extend the capabilities of the Java language in terms of numeric computation.
+
+\subsection*{Key Functionalities}
+\begin{itemize}[noitemsep]
+    \item Support for arbitrary-length integer arithmetic via the \texttt{AInteger} class
+    \item Floating-point arithmetic with up to 1000 digits after the decimal point using \texttt{AFloat}
+    \item Support for basic arithmetic operations: addition, subtraction, multiplication, and division
+    \item Operator overloading through intuitive method interfaces (e.g., \texttt{add()}, \texttt{sub()}, etc.)
+    \item Dual CLI support through both Java and Python scripts
+    \item Modular and reusable packaging using \texttt{.jar}, with Maven integration
+\end{itemize}
+
+\subsection*{Illustrative Examples}
+\textbf{Integer Addition:}
+\begin{lstlisting}[language=Java]
+AInteger a = new AInteger("1234");
+AInteger b = new AInteger("4321");
+AInteger result = a.add(b);  // Output: 5555
+System.out.println(result);
+\end{lstlisting}
+
+\textbf{Floating-point Multiplication (via Python CLI):}
+\begin{lstlisting}[language=bash]
+$ python run.py float mul 1.5 2.5
+# Output: 3.75
+\end{lstlisting}
+
+\subsection*{Design Decisions}
+\textit{[To be completed by the team: Include internal representation, precision handling, rounding methods, parsing strategies, etc.]}
+
+\section{User Guide (README Summary)}
+\label{sec:readme}
+This section summarizes the README for end-users, outlining how to compile, execute, and integrate the library in different environments.
+
+\subsection*{Compilation and Execution (Java CLI)}
+\begin{verbatim}
+javac src/main/java/arbitraryarithmetic/*.java src/main/java/MyInfArith.java
+java -cp src/main/java MyInfArith int add 123 456
+\end{verbatim}
+
+\subsection*{Python CLI Interface}
+\begin{verbatim}
+python run.py float mul 1.5 2.5
+\end{verbatim}
+
+\subsection*{Using the Packaged JAR}
+\begin{verbatim}
+java -cp target/aarithmetic.jar MyInfArith int sub 1000 250
+\end{verbatim}
+
+\subsection*{Library Integration in Java Projects}
+\begin{verbatim}
+import arbitraryarithmetic.*;
+
+public class TestMain {
+    public static void main(String[] args) {
+        AInteger a = new AInteger("1234");
+        AInteger b = new AInteger("4321");
+        AInteger result = a.add(b);
+        System.out.println(result);  // Should print 5555
+    }
+}
+\end{verbatim}
+
+\subsection*{Building with Maven}
+\begin{verbatim}
+mvn clean package
+\end{verbatim}
+
+\section{Git Commit History Snapshot}
+\label{sec:commits}
+Include a visual summary of the git commit timeline. This helps in understanding the evolution and collaborative effort behind the project.
+
+\begin{figure}[h]
+    \centering
+
+    \caption{Snapshot of Git Commit History}
+\end{figure}
+
+\section{Limitations}
+\label{sec:limitations}
+Despite the library’s wide utility, it has the following limitations:
+
+\begin{itemize}[noitemsep]
+    \item \textit{[Add known performance issues or unsupported edge cases]}
+    \item \textit{[Mention absence of advanced mathematical functions if applicable]}
+    \item \textit{[Discuss possible overflow or rounding issues in float handling if any]}
+\end{itemize}
+
+\section{Verification and Testing Approach}
+\label{sec:verification}
+Robust verification was carried out through manual and automated test cases designed to cover a comprehensive set of scenarios.
+
+\subsection*{Test Scenarios}
+\begin{itemize}[noitemsep]
+    \item Comparisons of positive vs. negative numbers
+    \item Handling of extremely large numerical inputs
+    \item Behavior with zero and identity elements
+    \item Consistency in floating-point division and rounding
+    \item Graceful handling of malformed or invalid inputs
+\end{itemize}
+
+\subsection*{Example Test Case}
+\begin{verbatim}
+Input: AInteger("999999999999") + AInteger("1")
+Expected Output: AInteger("1000000000000")
+\end{verbatim}
+
+\textit{[Mention any automated testing frameworks or scripts used.]}
+
+\section{Key Learnings}
+\label{sec:learnings}
+This section reflects on the technical and collaborative takeaways from the project.
+
+\begin{itemize}[noitemsep]
+    \item \textit{[Discuss conceptual learning in numerical computing or Java internals]}
+    \item \textit{[Highlight any optimizations or data structure decisions that were particularly valuable]}
+    \item \textit{[Mention challenges in parsing, memory handling, or CLI integration]}
+\end{itemize}
+
 \end{document}

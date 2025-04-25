@@ -191,6 +191,11 @@ public class AInteger {
 
 
     public boolean compare(AInteger other){
+
+        this.removeLeadingZeros();
+        other.removeLeadingZeros();
+
+        
        if(this.digit.size()>other.digit.size()) return true;
        if(this.digit.size()<other.digit.size()) return false;
 
@@ -211,6 +216,7 @@ public class AInteger {
         ans.digit.clear();
         
         ans.isnegative =false;
+
 
 
         if(this.isnegative!=other.isnegative){
@@ -250,9 +256,17 @@ public class AInteger {
             throw new ArithmeticException("Cannot divide by 0. Please check your input.");
         }
 
+        if(!this.compare(other)){
+            return new AInteger();
+        }
+        
+
+        this.removeLeadingZeros();
+        other.removeLeadingZeros();
 
     
         AInteger result = new AInteger();
+        result.digit.clear();
        
         
         result.isnegative = (this.isnegative != other.isnegative);
@@ -316,9 +330,9 @@ public class AInteger {
 
 
 
-    public void removeTrailingZeros(int scale){
+    public void removeTrailingZeros(int scale, int point){
         
-        while(scale>0 && this.digit.get(0)==0){
+        while(scale>point && this.digit.get(0)==0){
             this.digit.remove(0);
             scale--;
         }
