@@ -275,20 +275,32 @@ public class AInteger {
 
         AInteger dividend = new AInteger();
         dividend.digit = new ArrayList<>(this.digit.subList(Math.max(0,this.digit.size() - other.digit.size()), this.digit.size()));
+        
     
-
-
-        for (int i = this.digit.size() - other.digit.size() - 1; i >= 0; i--) {
-            dividend.digit.add(0, this.digit.get(i));
-            dividend.removeLeadingZeros();
-    
+        if(this.digit.size() == other.digit.size()){
             int count = 0;
             while (dividend.compare(other)) {
                 dividend = dividend.sub(other);
                 count++;
             }
-            result.digit.add(0, count);
+            result.digit.add(0, count); 
         }
+        
+        else{
+            for (int i = this.digit.size() - other.digit.size()-1 ; i >= 0; i--) {
+                dividend.digit.add(0, this.digit.get(i));
+                dividend.removeLeadingZeros();
+        
+                int count = 0;
+                while (dividend.compare(other)) {
+                    dividend = dividend.sub(other);
+                    count++;
+                }
+                result.digit.add(0, count);
+            }
+        }
+
+        
     
         result.removeLeadingZeros();
         return result;
@@ -330,11 +342,4 @@ public class AInteger {
 
 
 
-    public void removeTrailingZeros(int scale){
-        
-        while(scale>0 && this.digit.get(0)==0){
-            this.digit.remove(0);
-            scale--;
-        }
-    }
 }
