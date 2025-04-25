@@ -330,9 +330,9 @@ public class AInteger {
 
 
 
-    public void removeTrailingZeros(int scale, int point){
+    public void removeTrailingZeros(int scale){
         
-        while(scale>point && this.digit.get(0)==0){
+        while(scale>0 && this.digit.get(0)==0){
             this.digit.remove(0);
             scale--;
         }

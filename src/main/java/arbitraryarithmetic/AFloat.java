@@ -155,11 +155,18 @@ public class AFloat  {
         AInteger ans = shifted_this.div(shifted_other);
         int before =ans.get_digits().size();
 
-        ans.removeTrailingZeros(scale+1000,Math.max(0, this.value.get_digits().size()-other.value.get_digits().size()+scale-other.scale));
+        ans.removeTrailingZeros(scale+1000);
 
         int after =ans.get_digits().size();
 
-        return new AFloat(ans,1000-before+after);
+        if (!this.shift_deci(scale).compare(other.shift_deci(scale))){
+            return new AFloat(ans,1001-before+after);
+        }
+        else{
+            return new AFloat(ans,1000-before+after);
+        }
+
+        
     }
 
 
