@@ -1,19 +1,25 @@
 package arbitraryarithmetic;
-
-
 import java.util.*;
+
+
+
 
 public class AInteger {
 
     public boolean isnegative;
     private List<Integer> digit;
 
-    public AInteger(){
-        this.digit = new ArrayList<>();
-        this.digit.add(0) ;
-        this.isnegative = false;
-    }
 
+
+
+
+
+    
+
+
+
+
+    //getter and setter fucntions to acces private int list digit 
     public void set_Digits(List<Integer> digit) {
         this.digit = new ArrayList<>(digit);
     }
@@ -48,14 +54,23 @@ public class AInteger {
        
     }
 
+
+    //Copy Constructor 
     public AInteger(AInteger other){
         this.isnegative = other.isnegative;
         this.digit = new ArrayList<>(other.digit);
     }
 
 
+    //
+    public AInteger(){
+        this.digit = new ArrayList<>();
+        this.digit.add(0) ;
+        this.isnegative = false;
+    }
 
 
+    //Parser 
     public AInteger parse(String s){
         return new AInteger(s);
     }
@@ -119,6 +134,10 @@ public class AInteger {
         
     }
    
+
+
+
+
 
 
 
@@ -190,24 +209,19 @@ public class AInteger {
 
 
 
-    public boolean compare(AInteger other){
 
-        this.removeLeadingZeros();
-        other.removeLeadingZeros();
 
-        
-       if(this.digit.size()>other.digit.size()) return true;
-       if(this.digit.size()<other.digit.size()) return false;
 
-       else{
-        for(int i=this.digit.size()-1;i>=0;i--){
-            if(this.digit.get(i)>other.digit.get(i)) return true;
-            if(this.digit.get(i)<other.digit.get(i)) return false;
-        }  
-        
-        return true;
-       }
-    }
+
+    
+
+
+
+
+
+
+
+
 
 
 
@@ -247,6 +261,14 @@ public class AInteger {
         ans.removeLeadingZeros();
         return ans;
     }
+
+
+
+
+
+
+
+
 
 
     public AInteger div(AInteger other) {
@@ -342,4 +364,39 @@ public class AInteger {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+    public boolean compare(AInteger other){
+
+        this.removeLeadingZeros();
+        other.removeLeadingZeros();
+
+        
+       if(this.digit.size()>other.digit.size()) return true;
+       if(this.digit.size()<other.digit.size()) return false;
+
+       else{
+        for(int i=this.digit.size()-1;i>=0;i--){
+            if(this.digit.get(i)>other.digit.get(i)) return true;
+            if(this.digit.get(i)<other.digit.get(i)) return false;
+        }  
+        
+        return true;
+       }
+    }
+
+
+
 }
+
+
+

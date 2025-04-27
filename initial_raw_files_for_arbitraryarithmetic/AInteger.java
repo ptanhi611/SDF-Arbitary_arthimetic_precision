@@ -1,7 +1,6 @@
 package initial_raw_files_for_arbitraryarithmetic;
 
 
-
 import java.util.*;
 
 public class AInteger {
@@ -192,6 +191,11 @@ public class AInteger {
 
 
     public boolean compare(AInteger other){
+
+        this.removeLeadingZeros();
+        other.removeLeadingZeros();
+
+        
        if(this.digit.size()>other.digit.size()) return true;
        if(this.digit.size()<other.digit.size()) return false;
 
@@ -212,6 +216,7 @@ public class AInteger {
         ans.digit.clear();
         
         ans.isnegative =false;
+
 
 
         if(this.isnegative!=other.isnegative){
@@ -251,9 +256,17 @@ public class AInteger {
             throw new ArithmeticException("Cannot divide by 0. Please check your input.");
         }
 
+        if(!this.compare(other)){
+            return new AInteger();
+        }
+        
+
+        this.removeLeadingZeros();
+        other.removeLeadingZeros();
 
     
         AInteger result = new AInteger();
+        result.digit.clear();
        
         
         result.isnegative = (this.isnegative != other.isnegative);
@@ -262,20 +275,32 @@ public class AInteger {
 
         AInteger dividend = new AInteger();
         dividend.digit = new ArrayList<>(this.digit.subList(Math.max(0,this.digit.size() - other.digit.size()), this.digit.size()));
+        
     
-
-
-        for (int i = this.digit.size() - other.digit.size() - 1; i >= 0; i--) {
-            dividend.digit.add(0, this.digit.get(i));
-            dividend.removeLeadingZeros();
-    
+        if(this.digit.size() == other.digit.size()){
             int count = 0;
             while (dividend.compare(other)) {
                 dividend = dividend.sub(other);
                 count++;
             }
-            result.digit.add(0, count);
+            result.digit.add(0, count); 
         }
+        
+        else{
+            for (int i = this.digit.size() - other.digit.size()-1 ; i >= 0; i--) {
+                dividend.digit.add(0, this.digit.get(i));
+                dividend.removeLeadingZeros();
+        
+                int count = 0;
+                while (dividend.compare(other)) {
+                    dividend = dividend.sub(other);
+                    count++;
+                }
+                result.digit.add(0, count);
+            }
+        }
+
+        
     
         result.removeLeadingZeros();
         return result;
@@ -317,13 +342,4 @@ public class AInteger {
 
 
 
-    public void removeTrailingZeros(int scale){
-        
-
-        while(scale>0 && this.digit.get(0)==0){
-            this.digit.remove(0);
-            scale--;
-        }
-        
-    }
 }

@@ -27,7 +27,7 @@ public class AFloat  {
 
 
 
-
+    //String Constructor
 
     public AFloat(String num){
         
@@ -71,6 +71,8 @@ public class AFloat  {
 
 
 
+
+    //Copy Constructor
     public AFloat(AFloat a){
         this.value=a.value;
         this.scale=a.scale;
@@ -80,7 +82,7 @@ public class AFloat  {
 
 
 
-
+    //Helper constructor
     public AFloat(AInteger a, int scale){
         this.value = a;
         this.scale = scale;
@@ -90,7 +92,7 @@ public class AFloat  {
 
 
 
-
+    //parser
     public AFloat parse(String s){
         return new AFloat(s);
     }
@@ -98,6 +100,8 @@ public class AFloat  {
 
 
 
+
+    //Addition
     public AFloat add(AFloat other){
         int max_scale = Math.max(this.scale,other.scale);
         AInteger shifted_other = other.shift_deci(max_scale);
@@ -105,7 +109,9 @@ public class AFloat  {
 
         AInteger ans = shifted_this.add(shifted_other);
 
-        return new AFloat(ans,max_scale);
+        AFloat result = new AFloat(ans,max_scale);
+        result.removeTrailingZeros();
+        return result;
     }
 
 
@@ -114,7 +120,7 @@ public class AFloat  {
 
 
 
-
+    //Subtraction
     public AFloat sub(AFloat other){
         int max_scale = Math.max(this.scale,other.scale);
 
@@ -123,7 +129,9 @@ public class AFloat  {
 
         AInteger ans = shifted_this.sub(shifted_other);
 
-        return new AFloat(ans,max_scale);
+        AFloat result = new AFloat(ans,max_scale);
+        result.removeTrailingZeros();
+        return result;
     }
     
 
@@ -134,12 +142,14 @@ public class AFloat  {
 
 
 
-
+    //Multiplication
     public AFloat mul(AFloat other){
         AInteger ans = this.value.mul(other.value);
         int scale = this.scale + other.scale;
 
-        return new AFloat(ans,scale);
+        AFloat result = new AFloat(ans,scale);
+        result.removeTrailingZeros();
+        return result;
     }
 
 
@@ -148,6 +158,8 @@ public class AFloat  {
 
 
 
+
+    //Division 
     public AFloat div(AFloat other){
 
         int scale = Math.max(this.scale,other.scale);
@@ -170,9 +182,13 @@ public class AFloat  {
         other.removeTrailingZeros();
 
         if(this.value.get_digits().size()-this.scale==other.value.get_digits().size()-other.scale){
-            return new AFloat(result.mul(new AFloat("1")));
+            result = new AFloat(result.mul(new AFloat("1")));
+            result.removeTrailingZeros();
+            return result;
+            
         }
         else{
+            result.removeTrailingZeros();
             return result;
         }
         
@@ -191,45 +207,40 @@ public class AFloat  {
 
 
 
-
+    //Helper fucntion to print the string from Afloat
     public String F_to_String() {
-    StringBuilder ans = new StringBuilder();
+        StringBuilder ans = new StringBuilder();
 
-    if (this.value.isnegative) {
-        ans.append('-');
-    }
-
-    List<Integer> digits = this.value.get_digits();
-    int n = digits.size();
-
-    if (scale >= n) {
-        // e.g., 0.000045
-        ans.append("0.");
-        for (int i = 0; i < scale - n; i++) {
-            ans.append('0');
+        if (this.value.isnegative) {
+            ans.append('-');
         }
-        for (int i = n - 1; i >= 0; i--) {
-            ans.append(digits.get(i));
-        }
-    } else {
-        // Normal case
-        for (int i = n - 1; i >= 0; i--) {
-            ans.append(digits.get(i));
-            if (i == scale && scale != 0) {
-                ans.append('.');
+
+        List<Integer> digits = this.value.get_digits();
+        int n = digits.size();
+
+        if (scale >= n) {
+            
+            ans.append("0.");
+            for (int i = 0; i < scale - n; i++) {
+                ans.append('0');
+            }
+            for (int i = n - 1; i >= 0; i--) {
+                ans.append(digits.get(i));
+            }
+        } 
+        else {
+        
+            for (int i = n - 1; i >= 0; i--) {
+                ans.append(digits.get(i));
+                if (i == scale && scale != 0) {
+                    ans.append('.');
+                }
             }
         }
+
+        return ans.toString();
     }
 
-    return ans.toString();
-}
-
-
-
-
-
-    
-
 
 
 
@@ -239,6 +250,12 @@ public class AFloat  {
 
 
 
+
+    
+
+
+
+    //helper function to shift the decimal point towards right for required no. of times
     public AInteger shift_deci(int place){
         int max_shift = Math.abs(this.scale - place);
         AInteger shifted = new AInteger(this.value);
@@ -252,6 +269,9 @@ public class AFloat  {
 
 
 
+
+
+    //Helper function to remove trailing zeroes in a decimal number eg 89.20000
     public void removeTrailingZeros(){
         
         while(this.scale>0 && this.value.get_digits().size()>0 && this.value.get_digits().get(0)==0){
@@ -261,13 +281,18 @@ public class AFloat  {
     }
 
 
+
+
+
+
+
+
+    //Helper function to remove leading zeroes eg 00000.01
     public void removeLeadingZeros() {
-        List<Integer> digits = this.value.get_digits();
+        List<Integer> digits = this.value.get_digits();        
+        int integerDigits = this.value.get_digits().size() - this.scale;
     
-        // Number of digits that are before the decimal
-        int integerDigits = digits.size() - this.scale;
-    
-        // Remove trailing digits in reverse array if they are leading zeroes in actual number
+        
         while (integerDigits > 1 && digits.get(digits.size() - 1) == 0) {
             digits.remove(digits.size() - 1);
             integerDigits--;
