@@ -70,5 +70,6 @@ SDF-Arbritary-Arthimetic-precision/
 ```
 
 ## 👥 Authors
-- Your Name
-- Roll Number
+- RISHIT MITTAL
+- CS24BTECH11053
+  
