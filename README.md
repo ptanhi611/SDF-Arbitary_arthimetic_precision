@@ -52,18 +52,20 @@ java -cp .:target/aarithmetic.jar TestMain
 
 ## 🛠 Build with Maven
 ```bash
-mvn clean package
+mvn clean install
 ```
 
 ## 📁 Project Structure
 
 ```
-final_project/
+SDF-Arbritary-Arthimetic-precision/
+├── MyInfArith
+├── initial_raw_files_for_arbritrayarithmetic
 ├── src/main/java/arbitraryarithmetic/
 ├── target/aarithmetic.jar
 ├── run.py
 ├── pom.xml
-├── report.tex
+├── reports
 ├── README.md
 ```
 
