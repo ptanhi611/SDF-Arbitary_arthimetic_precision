@@ -26,7 +26,7 @@ python run.py float mul 1.5 2.5
 
 ### 📦 Mode 3: Using the JAR
 ```bash
-java -cp target/aarithmetic.jar MyInfArith int sub 1000 250
+java -cp.: target/aarithmetic.jar MyInfArith.MyInfArith int sub 1000 250
 ```
 
 ## 🔗 Using the Library in Another Java Project
@@ -69,7 +69,7 @@ SDF-Arbritary-Arthimetic-precision/
 ├── README.md
 ```
 
-## 👥 Authors
+## 👥 Author
 - RISHIT MITTAL
 - CS24BTECH11053
   
