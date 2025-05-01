@@ -4,4 +4,4 @@
 \contentsline {section}{\numberline {4}Git Commit History Snapshot}{7}{section.4}%
 \contentsline {section}{\numberline {5}Limitations}{7}{section.5}%
 \contentsline {section}{\numberline {6}Verification and Testing Approach}{8}{section.6}%
-\contentsline {section}{\numberline {7}Key Learnings}{8}{section.7}%
+\contentsline {section}{\numberline {7}Key Learnings}{9}{section.7}%
