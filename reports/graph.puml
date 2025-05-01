@@ -1,0 +1,59 @@
+@startuml UML Class Diagram
+title Arbitrary Precision Arithmetic Library - UML Class Diagram
+
+
+package arbitraryarithmetic {
+
+    class AInteger {
+        + boolean isnegative
+        - List<Integer> digit
+
+        + get_digits()
+        + set_digits()
+        + AInteger()
+        + AInteger(String num)
+        + AInteger(AInteger other)
+        + AInteger parse(String value)
+        + AInteger add(AInteger other)
+        + AInteger sub(AInteger other)
+        + AInteger mul(AInteger other)
+        + AInteger div(AInteger other)
+        + String I-to_String()
+        --
+                
+        
+    }
+
+    class AFloat {
+        - AInteger value
+        + int scale
+
+        + AFloat()
+        + AFloat(String value)
+        + AFloat(AFloat other)
+        + AFloat parse(String value)
+        + AFloat add(AFloat other)
+        + AFloat sub(AFloat other)
+        + AFloat mul(AFloat other)
+        + AFloat div(AFloat other)
+        + String F_to_String()
+        + AInteger shift_deci(int place)
+        # removeTrailingZeroes
+        # removeLeadingZeroes
+        --
+       
+        
+    }
+}
+
+package MyInfArith {
+
+    class MyInfArith {
+        + static void main(String[] args)
+    }
+    
+    MyInfArith ..> arbitraryarithmetic.AInteger : uses
+    MyInfArith ..> arbitraryarithmetic.AFloat : uses
+}
+
+@enduml

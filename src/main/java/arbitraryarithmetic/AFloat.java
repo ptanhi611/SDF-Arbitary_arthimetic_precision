@@ -161,17 +161,18 @@ public class AFloat  {
 
     //Division 
     public AFloat div(AFloat other){
+        int precision =30;
 
         int scale = Math.max(this.scale,other.scale);
         
 
-        AInteger shifted_this = this.shift_deci(scale+1000);
+        AInteger shifted_this = this.shift_deci(scale+precision);
         AInteger shifted_other = other.shift_deci(scale);
 
         AInteger ans = shifted_this.div(shifted_other);
         
 
-        AFloat result = new AFloat(ans,1000);
+        AFloat result = new AFloat(ans,precision);
         result.removeTrailingZeros();
 
 

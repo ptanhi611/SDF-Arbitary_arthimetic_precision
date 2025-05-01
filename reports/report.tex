@@ -5,6 +5,7 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{float}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{caption}
@@ -77,9 +78,145 @@ System.out.println(result);
 $ python run.py float mul 1.5 2.5
 # Output: 3.75
 \end{lstlisting}
+\subsection*{\textbf{\LARGE Design Decisions}}
 
-\subsection*{Design Decisions}
-\textit{[To be completed by the team: Include internal representation, precision handling, rounding methods, parsing strategies, etc.]}
+\subsubsection*{\textbf{\large AInteger}}
+
+The \texttt{AInteger} class provides support for arbitrary-precision integers using a list-based digit representation and handles all basic integer arithmetic operations with full control over signs and digit manipulation.
+
+\paragraph*{\textbf{Internal Representation}}
+\begin{itemize}
+  \item Uses a \texttt{private List<Integer> digits} to store digits of the number in reverse order — least significant digit (LSD) at index 0.
+  \item This ordering simplifies arithmetic operations like carry/borrow propagation.
+  \item Maintains a \texttt{public boolean isnegative} to represent the sign explicitly.
+  \item Chose \texttt{List<Integer>} over \texttt{String} for better performance and flexibility during digit manipulation.
+\end{itemize}
+
+\paragraph*{\textbf{Accessors and Mutators}}
+\begin{itemize}
+  \item \texttt{get\_digits()}: Returns the internal digit list for inspection or low-level manipulation.
+  \item \texttt{set\_digits(List<Integer>)}: Allows safe replacement of the digit list, enabling transformations without exposing internals.
+\end{itemize}
+
+\paragraph*{\textbf{Constructors and Parsing}}
+\begin{itemize}
+  \item \textbf{String constructor}:
+  \begin{itemize}
+    \item Handles optional leading `-` to set \texttt{isnegative}.
+    \item Parses the numeric characters into reversed digits.
+    \item Ignores leading zeroes by trimming them after parsing.
+  \end{itemize}
+  \item \textbf{Copy constructor}: Deep-copies another \texttt{AInteger}, ensuring mutability safety.
+  \item \textbf{Empty constructor}: Initializes the object to represent the integer zero.
+  \item \textbf{Static parser}: Provides a clean interface to parse a string and obtain an \texttt{AInteger}.
+\end{itemize}
+
+\paragraph*{\textbf{Arithmetic Operations}}
+\begin{itemize}
+  \item All operations are implemented with full control over digit-wise calculation and sign logic.
+  \item \textbf{Addition and Subtraction}:
+  \begin{itemize}
+    \item Handles same-sign and different-sign logic explicitly.
+    \item Performs digit-wise carry and borrow tracking.
+  \end{itemize}
+  \item \textbf{Multiplication}:
+  \begin{itemize}
+    \item Uses standard long multiplication technique.
+    \item Result sign is derived from operand signs.
+  \end{itemize}
+  \item \textbf{Division}:
+  \begin{itemize}
+    \item Performs long division by repeated subtraction and digit estimation.
+    \item Returns integer quotient only (no remainder or decimal part).
+  \end{itemize}
+\end{itemize}
+
+\paragraph*{\textbf{Formatting and Normalization}}
+\begin{itemize}
+  \item \texttt{I\_to\_String()}: Converts the internal digit list to a human-readable string, adding `-` prefix if negative.
+  \item \texttt{removeLeadingZeroes()}: Normalizes internal representation by trimming leading zeroes to avoid redundancy.
+\end{itemize}
+
+\vspace{1em}
+\subsubsection*{\textbf{\large AFloat}}
+
+The \texttt{AFloat} class extends \texttt{AInteger} functionality to floating-point arithmetic with arbitrary precision by tracking decimal places through a \texttt{scale} parameter.
+
+\paragraph*{\textbf{Internal Representation}}
+\begin{itemize}
+  \item Each \texttt{AFloat} instance includes:
+  \begin{itemize}
+    \item A private \texttt{AInteger value} storing all digits.
+    \item An integer \texttt{scale} indicating how many digits lie after the decimal point.
+  \end{itemize}
+  \item Example: The float \texttt{1.23} is represented as:
+  \begin{itemize}
+    \item \texttt{value = 123}, \texttt{scale = 2}
+  \end{itemize}
+\end{itemize}
+
+\paragraph*{\textbf{Constructors and Parsing}}
+\begin{itemize}
+  \item \textbf{Default constructor:} Initializes the number as \texttt{0.0} with \texttt{scale = 1}.
+  \item \textbf{String constructor:}
+  \begin{itemize}
+    \item Parses optional negative sign and decimal point.
+    \item Counts decimal digits and updates scale accordingly.
+    \item Builds digit list in reverse, skipping the decimal point.
+  \end{itemize}
+  \item \textbf{Copy constructor:} Clones another \texttt{AFloat} instance.
+  \item \textbf{Helper constructor:} Creates a float from an \texttt{AInteger} and a scale.
+  \item \textbf{Parser:} Static \texttt{parse(String)} method returns a parsed \texttt{AFloat}.
+\end{itemize}
+
+\paragraph*{\textbf{Arithmetic Operations}}
+\begin{itemize}
+  \item \textbf{Addition \& Subtraction}
+  \begin{itemize}
+    \item Align scales of operands using \texttt{shift\_deci}.
+    \item Perform underlying \texttt{AInteger} addition/subtraction.
+    \item Return result with common scale, then normalize.
+  \end{itemize}
+
+  \item \textbf{Multiplication}
+  \begin{itemize}
+    \item Multiply internal \texttt{AInteger} values.
+    \item Final scale is the sum of operand scales.
+  \end{itemize}
+
+  \item \textbf{Division}
+  \begin{itemize}
+    \item Shifts numerator and denominator for precision handling.
+    \item Uses fixed decimal precision (default: 30 digits).
+    \item Returns normalized \texttt{AFloat} result.
+  \end{itemize}
+\end{itemize}
+
+\paragraph*{\textbf{Formatting and Normalization}}
+\begin{itemize}
+  \item \texttt{F\_to\_String()}:
+  \begin{itemize}
+    \item Assembles the output string with correct decimal positioning.
+    \item Inserts leading zeros when necessary for values $< 1$.
+  \end{itemize}
+  \item \texttt{removeTrailingZeros()}: Trims insignificant zeroes after the decimal.
+  \item \texttt{removeLeadingZeros()}: Removes leading zeros before the decimal point.
+\end{itemize}
+
+\paragraph*{\textbf{Decimal Utility Function}}
+\begin{itemize}
+  \item \texttt{shift\_deci(int)} multiplies the number by $10^n$ to align decimal places during operations.
+\end{itemize}
+
+\vspace{1em}
+\subsection*{\textbf{Class Diagram}}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{/home/rishit-mittal/Desktop/New Folder/SDF-Arbitary_arthimetic_precision-1/reports/image.png}
+  \caption{UML Diagram of the \texttt{AInteger} and \texttt{AFloat} Classes}
+  \label{fig:uml-classes}
+\end{figure}
+
 
 \section{User Guide (README Summary)}
 \label{sec:readme}
@@ -117,12 +254,12 @@ public class TestMain {
 
 \subsection*{Building with Maven}
 \begin{verbatim}
-mvn clean package
+mvn clean install or mvn clean package
 \end{verbatim}
 
 \section{Git Commit History Snapshot}
 \label{sec:commits}
-Include a visual summary of the git commit timeline. This helps in understanding the evolution and collaborative effort behind the project.
+Including a visual summary of the git commit timeline.This helps in understanding the evolution and collaborative effort behind the project.
 
 \begin{figure}[h]
     \centering
@@ -135,9 +272,9 @@ Include a visual summary of the git commit timeline. This helps in understanding
 Despite the library’s wide utility, it has the following limitations:
 
 \begin{itemize}[noitemsep]
-    \item \textit{[Add known performance issues or unsupported edge cases]}
-    \item \textit{[Mention absence of advanced mathematical functions if applicable]}
-    \item \textit{[Discuss possible overflow or rounding issues in float handling if any]}
+    \item \textit{The Algorithm used for multiplication is simple school book method which is of complexity O(\( n^2 \))}
+    \item \textit{I thought of implementing some complex mathematical Algorithms for division and multiplication and also thought of using \( 10^8\) as base instead of base 10 but the code was becoming too complicated for me, so I couldn't apply it.}
+    \item \textit{There is no stopage of printing of digits in float div until 30 digits even if the digits are repeating. Theres is round off for the last digit of the decimal (\(30^{th}\)} place).
 \end{itemize}
 
 \section{Verification and Testing Approach}
@@ -159,16 +296,16 @@ Input: AInteger("999999999999") + AInteger("1")
 Expected Output: AInteger("1000000000000")
 \end{verbatim}
 
-\textit{[Mention any automated testing frameworks or scripts used.]}
+\text{I coundn't implement any automated testing framework but i tested it thoroughly covering every edge case and evry functionality.}
 
 \section{Key Learnings}
 \label{sec:learnings}
 This section reflects on the technical and collaborative takeaways from the project.
 
 \begin{itemize}[noitemsep]
-    \item \textit{[Discuss conceptual learning in numerical computing or Java internals]}
-    \item \textit{[Highlight any optimizations or data structure decisions that were particularly valuable]}
-    \item \textit{[Mention challenges in parsing, memory handling, or CLI integration]}
+    \item \text{Learned a lot of JAVA OOPS concepts. }
+    \item \text{I Tried to implement few different Algorithms for optimization, but the code went too complex and I couldn't implement those fully in short time. }
+    \item \text{Learend A lot about how to CLI to compile, run and build systems. }
 \end{itemize}
 
 \end{document}
