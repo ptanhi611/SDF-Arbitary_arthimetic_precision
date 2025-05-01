@@ -6,8 +6,8 @@ import java.util.*;
 
 public class AInteger {
 
-    public boolean isnegative;
-    private List<Integer> digit;
+    public boolean isnegative;  //Bool to check whether it is +ve or -ve
+    private List<Integer> digit;//List of int to hold al the digits
 
 
 
@@ -36,13 +36,13 @@ public class AInteger {
         this.digit = new ArrayList<>();
         this.isnegative = false;
 
-        if(num.charAt(0)=='-'){
+        if(num.charAt(0)=='-'){             //check for negative
             this.isnegative = true;
             num = num.substring(1);
         }
 
         for(int i=num.length()-1;i>=0;i--){
-            if(Character.isDigit(num.charAt(i))){
+            if(Character.isDigit(num.charAt(i))){       // check for invalid input
                 this.digit.add(num.charAt(i)-'0');
             }
             else{
@@ -62,7 +62,7 @@ public class AInteger {
     }
 
 
-    //
+    //Empty Constructor
     public AInteger(){
         this.digit = new ArrayList<>();
         this.digit.add(0) ;
@@ -87,7 +87,7 @@ public class AInteger {
 
         if(this.isnegative != other.isnegative){
             if(this.isnegative){
-                AInteger temp = new AInteger(this);
+                AInteger temp = new AInteger(this);                             //simple logic to handle sign of inputs
                 temp.isnegative = false;
                 ans.set_Digits(temp.sub(other).get_digits());
                 ans.isnegative = !temp.sub(other).isnegative;
@@ -227,8 +227,7 @@ public class AInteger {
 
     public AInteger mul(AInteger other){
         AInteger ans = new AInteger();
-        ans.digit.clear();
-        
+        ans.digit.clear();        
         ans.isnegative =false;
 
 
@@ -236,6 +235,7 @@ public class AInteger {
         if(this.isnegative!=other.isnegative){
             ans.isnegative =true;
         }
+
 
         long[] temp= new long[this.digit.size()+other.digit.size()];
         
@@ -397,6 +397,3 @@ public class AInteger {
 
 
 }
-
-
-
